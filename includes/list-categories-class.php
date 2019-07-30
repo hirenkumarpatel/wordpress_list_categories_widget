@@ -33,13 +33,19 @@ class ListCategories_Widget extends WP_Widget {
 		}
 		
 		/**
-		 * retriving url of the post
+		 * retriving categories list from wordpress
+		 * @param $args;
+		 * $args is to filter category list and customize
 		 */
-		global $post;
 		
-
+		$args=array(
+			'title_li'=>'',
+			'hierarchical'=>false,
+			'show_count'=>$instance['show_count']
+		);
+		
 		/**widget content - the actual output of widget */
-		  echo 'some output here';
+		echo wp_list_categories($args) ;
 		
 		echo $args['after_widget']; // you can use anything to display after widget ex. </div>
 	}
@@ -53,11 +59,10 @@ class ListCategories_Widget extends WP_Widget {
 	 * @param array $instance Previously saved values from database.
 	 */
 	public function form( $instance ) {
-		/** Title of the widget in adminpanel */
-		$title = ! empty( $instance['title'] ) ? $instance['title'] : esc_html__( 'List Categories', 'lc_domain' );
+		
+		/** Default value of Title of the widget in adminpanel */
+		$title = ! empty( $instance['title'] ) ? $instance['title'] : esc_html__( 'Categories', 'lc_domain' );
 
-		
-		
 		?>
 
 		<!-- html for Title -->
@@ -69,19 +74,18 @@ class ListCategories_Widget extends WP_Widget {
 			name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" 
 			type="text" value="<?php echo esc_attr( $title ); ?>">
 		</p>
-		
-		<!-- html for  button size -->
-		<!-- <p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'size' ) ); ?>"><?php esc_attr_e( 'Widget Size:', 'lc_domain' ); ?></label> 
-			<select 
-			class="widefat" 
-			id="<?php echo esc_attr( $this->get_field_id( 'size' ) ); ?>" 
-			name="<?php echo esc_attr( $this->get_field_name( 'size' ) ); ?>" >
-			<option value="large" <?php echo ($size=='large') ? 'selected' : '' ?>>Large</option>
-			<option value="small" <?php echo ($size=='small') ? 'selected' : '' ?>>Small</option>
-			</select>
-		</p> -->
 
+		<!-- html for Show post counts -->
+		<p>
+			<input 
+				class="widefat" 
+				id="<?php echo esc_attr( $this->get_field_id( 'show_count' ) ); ?>" 
+				name="<?php echo esc_attr( $this->get_field_name( 'show_count' ) ); ?>" 
+				type="checkbox" <?php checked($instance['show_count'],'on') ; ?>>
+			
+			<label for="<?php echo esc_attr( $this->get_field_id( 'show_count' ) ); ?>"><?php esc_attr_e( 'Show Posts Count', 'lc_domain' ); ?></label> 
+			
+		</p>
 		<?php 
 	}
 
@@ -99,11 +103,14 @@ class ListCategories_Widget extends WP_Widget {
 		$instance = array();
 		/** title to be changed when changed in widget area backend */
 		$instance['title'] = ( ! empty( $new_instance['title'] ) ) ? sanitize_text_field( $new_instance['title'] ) : '';
+
+		/** show posts count to be changed when changed in widget area backend */
+		$instance['show_count'] = strip_tags( $new_instance['show_count'] );
 		
 		return $instance;
 	}
 
 } 
 /** 
- * class Youtubesubscribe_Widget
+ * class ListCategories_Widget
  * next is to register this class to main widget file*/ 
