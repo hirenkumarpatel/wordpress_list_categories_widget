@@ -1,2 +1,2 @@
-# wordpress_list_categories_widget
+# Wordpress List Categories Widget
 This Widget will show List of Categories 
